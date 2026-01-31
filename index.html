@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opening Range Breakout Pre-Trade Checklist</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f5f7;
+            color: #1d1d1f;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+            padding: 40px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #1d1d1f;
+        }
+
+        .subtitle {
+            color: #86868b;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+
+        .progress-container {
+            margin-bottom: 30px;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: #86868b;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e5e5e7;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #8b5cf6, #a78bfa);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            opacity: 0.4;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .section.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            margin-bottom: 16px;
+            color: #1d1d1f;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-number {
+            width: 28px;
+            height: 28px;
+            background: #8b5cf6;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 16px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            background: #fafafa;
+            transition: all 0.2s ease;
+        }
+
+        .checklist-item:hover {
+            background: #f5f5f7;
+        }
+
+        .checkbox-wrapper {
+            margin-right: 16px;
+            margin-top: 2px;
+        }
+
+        input[type="checkbox"] {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            accent-color: #8b5cf6;
+        }
+
+        .item-text {
+            flex: 1;
+            font-size: 0.95rem;
+            color: #1d1d1f;
+        }
+
+        .item-number {
+            min-width: 24px;
+            color: #86868b;
+            font-weight: 500;
+            margin-right: 12px;
+        }
+
+        .notes-section {
+            margin-top: 30px;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 14px;
+            border: 2px solid #e5e5e7;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #8b5cf6;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #8b5cf6;
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            background: #7c3aed;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #1d1d1f;
+            border: 2px solid #e5e5e7;
+        }
+
+        .btn-secondary:hover {
+            border-color: #8b5cf6;
+            color: #8b5cf6;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #1d1d1f;
+            color: white;
+            padding: 16px 24px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                padding: 20px;
+            }
+            .actions {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Opening Range Breakout Pre-Trade Checklist</h1>
+        <p class="subtitle">Complete each section to ensure optimal trade setup</p>
+
+        <div class="progress-container">
+            <div class="progress-label">
+                <span>Completion Progress</span>
+                <span id="progress-text">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </div>
+
+        <div id="checklist-container">
+            <!-- Checklist will be rendered here -->
+        </div>
+
+        <div class="notes-section">
+            <div class="section-title">
+                <span class="section-number">📝</span>
+                Notes
+            </div>
+            <textarea id="notes" placeholder="Add any additional notes or observations..."></textarea>
+        </div>
+
+        <div class="actions">
+            <button class="btn btn-secondary" id="reset-btn">Reset Checklist</button>
+            <button class="btn btn-primary" id="export-btn">Export Analysis</button>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const checklistData = {
+            sections: [
+                {
+                    title: 'Market Context',
+                    items: [
+                        'Trend Analysis (HTF): Is the Market trending (Uptrend, Downtrend) - Confirm with VWAP'
+                    ]
+                },
+                {
+                    title: 'Trade Set-Up',
+                    items: [
+                        'Is there a clear VWAP slope?',
+                        'Consistently increasing volume (15m) or volume spike prior to OR.',
+                        'Clear Price Action (15m) no long wicks.',
+                        'Risk:Reward Ratio: Is the potential reward favorable? 1.2R the Risk.',
+                        'Volume Filter: Is the coin doing at least $100K volume on Binance per average 1 min candle.'
+                    ]
+                },
+                {
+                    title: 'Risk Management',
+                    items: [
+                        'Position Sizing: Is the position size based on your risk tolerance? 0.5%',
+                        'Stop-Loss: Is the Stop-Loss Set based on a technical level? (e.g. Low or high of OR)',
+                        'I have accepted the loss mentally; I will not widen the stop.'
+                    ]
+                },
+                {
+                    title: 'Fundamental Considerations',
+                    items: [
+                        'News & Events: Have you Checked the Economical Calendar? There is no High impact news during the holding time. e.g. Next two Hours.',
+                        'Crypto Index: Have you check the relevant Crypto index? e.g. BTC.D, TOTAL 1. Is the coin correlated to the general direction of the Market?'
+                    ]
+                },
+                {
+                    title: 'Psychological State',
+                    items: [
+                        'Slept more than six hours, No Alcohol, No Weariness, No Fatigue.',
+                        'No trades have been taken in the last 30 minutes (cool-off Rule).'
+                    ]
+                }
+            ]
+        };
+
+        let checkedItems = {
+            sections: checklistData.sections.map(s => ({ items: new Array(s.items.length).fill(false) })),
+            notes: ''
+        };
+
+        function initApp() {
+            loadFromStorage();
+            renderChecklist();
+            attachEventListeners();
+            updateProgress();
+        }
+
+        function loadFromStorage() {
+            const saved = localStorage.getItem('orbChecklist');
+            if (saved) {
+                checkedItems = JSON.parse(saved);
+            }
+        }
+
+        function saveToStorage() {
+            localStorage.setItem('orbChecklist', JSON.stringify(checkedItems));
+        }
+
+        function renderChecklist() {
+            const container = document.getElementById('checklist-container');
+            container.innerHTML = '';
+            
+            let itemNumber = 1;
+            checklistData.sections.forEach((section, sectionIdx) => {
+                const sectionEl = document.createElement('div');
+                sectionEl.className = 'section';
+                sectionEl.dataset.section = sectionIdx;
+                
+                const titleEl = document.createElement('div');
+                titleEl.className = 'section-title';
+                titleEl.innerHTML = `
+                    <span class="section-number">${sectionIdx + 1}</span>
+                    ${section.title}
+                `;
+                sectionEl.appendChild(titleEl);
+
+                section.items.forEach((item, itemIdx) => {
+                    const itemEl = document.createElement('div');
+                    itemEl.className = 'checklist-item';
+                    
+                    const saved = checkedItems.sections[sectionIdx].items[itemIdx];
+                    
+                    itemEl.innerHTML = `
+                        <span class="item-number">${itemNumber}.</span>
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox" 
+                                   data-section="${sectionIdx}" 
+                                   data-item="${itemIdx}"
+                                   ${saved === true ? 'checked' : ''}>
+                        </div>
+                        <div class="item-text">${item}</div>
+                    `;
+                    
+                    sectionEl.appendChild(itemEl);
+                    itemNumber++;
+                });
+
+                container.appendChild(sectionEl);
+            });
+
+            document.getElementById('notes').value = checkedItems.notes || '';
+            updateSectionVisibility();
+        }
+
+        function updateSectionVisibility() {
+            const sections = document.querySelectorAll('.section');
+            
+            sections.forEach((section, idx) => {
+                if (idx === 0) {
+                    section.classList.add('active');
+                } else {
+                    const prevSection = checkedItems.sections[idx - 1];
+                    const allCompleted = prevSection.items.every(item => item === true);
+                    
+                    if (allCompleted) {
+                        section.classList.add('active');
+                    } else {
+                        section.classList.remove('active');
+                    }
+                }
+            });
+        }
+
+        function attachEventListeners() {
+            document.getElementById('checklist-container').addEventListener('change', (e) => {
+                if (e.target.type === 'checkbox') {
+                    const section = parseInt(e.target.dataset.section);
+                    const item = parseInt(e.target.dataset.item);
+                    
+                    checkedItems.sections[section].items[item] = e.target.checked;
+                    
+                    saveToStorage();
+                    updateProgress();
+                    updateSectionVisibility();
+                }
+            });
+
+            document.getElementById('notes').addEventListener('input', (e) => {
+                checkedItems.notes = e.target.value;
+                saveToStorage();
+            });
+
+            document.getElementById('export-btn').addEventListener('click', exportAnalysis);
+            document.getElementById('reset-btn').addEventListener('click', resetChecklist);
+        }
+
+        function updateProgress() {
+            let total = 0;
+            let completed = 0;
+
+            checklistData.sections.forEach((section, idx) => {
+                section.items.forEach((_, itemIdx) => {
+                    total++;
+                    if (checkedItems.sections[idx].items[itemIdx] === true) {
+                        completed++;
+                    }
+                });
+            });
+
+            const percentage = Math.round((completed / total) * 100);
+            document.getElementById('progress-fill').style.width = percentage + '%';
+            document.getElementById('progress-text').textContent = percentage + '%';
+        }
+
+        function exportAnalysis() {
+            const data = {
+                strategy: 'Opening Range Breakout',
+                timestamp: new Date().toISOString(),
+                checklist: checkedItems,
+                completionPercentage: parseInt(document.getElementById('progress-text').textContent)
+            };
+
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `orb-trade-analysis-${Date.now()}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+
+            showToast('Analysis exported successfully');
+        }
+
+        function resetChecklist() {
+            if (confirm('Are you sure you want to reset the current checklist?')) {
+                checkedItems = {
+                    sections: checklistData.sections.map(s => ({ items: new Array(s.items.length).fill(false) })),
+                    notes: ''
+                };
+                saveToStorage();
+                renderChecklist();
+                updateProgress();
+                showToast('Checklist reset');
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        initApp();
+    </script>
+</body>
+</html>
